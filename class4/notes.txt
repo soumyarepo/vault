@@ -1,0 +1,10 @@
+github authenticate enable via api-
+curl -k --header "X-Vault-Token: hvs.c0q1TEauLBob5BctiRiahTpw" --data '{"type": "github"}' --request POST http://13.64.213.180:8200/v1/sys/auth/github
+
+
+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
+
+curl -H "Authentication:token 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" https://api.github.com/orgs/vaultdevops
+
+
+curl -k --header "X-Vault-Token: hvs.c0q1TEauLBob5BctiRiahTpw" --data @githubpayload.json http://13.64.213.180:8200/v1/auth/github/config
