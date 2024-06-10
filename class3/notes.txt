@@ -1,0 +1,58 @@
+10-Userpass Auth Method via UI
+
+helm repo add hashicorp https://helm.releases.hashicorp.com
+helm repo list 
+helm repo update
+helm search repo vault --versions
+helm install vault hashicorp/vault --set='ui.enabled=true' --set='ui.serviceType=LoadBalancer'
+kubectl get pods
+--------------------------------------------------------------------------------------------
+
+11-Create auth method via CLI
+
+kubectl exec -it vault-0 /bin/sh
+vault login hvs.jwdWlFXsU4YPgMEMol1U4cc7
+vault auth list
+vault auth disable userpass
+vault auth eanble userpass
+------------------------------------------------------------------------------------------
+
+
+12-Create auth method via CLI for loop
+
+
+for u in alex boris chong maggie sam; do vault write auth/userpass/users/$u password=$u; done
+vault list auth/userpass/users
+
+vault list auth/userpass/users
+
+------------------------------------------------------------------------------------------------
+14-Create user via CLI
+
+vault auth enable userpass
+vault write --help
+vault write auth/userpass/users/alex password=alex1234
+---------------------------------------------------------------------------------
+15-Create user via API
+curl -k -H "X-Vault-Token: hvs.jwdWlFXsU4YPgMEMol1U4cc7" -X POST --data @payload.json http://40.78.123.89:8200/v1/auth/userpass/users/Adamdeveloper
+
+-------------------------------------------------------------------------------------------
+16-Enable userpass via API
+
+curl -k --header "X-Vault-Token:hvs.jwdWlFXsU4YPgMEMol1U4cc7" --request POST --data '{"type": "userpass"}' http://40.78.123.89:8200/v1/sys/auth/userpass
+
+$ curl -k --header "X-Vault-Token: hvs.jwdWlFXsU4YPgMEMol1U4cc7"      --request DELETE      http://40.78.123.89:8200/v1/sys/auth/userpass
+
+--------------------------------------
+17-for loop to create multiple users via CURL
+
+for u in apple mango,banna,pinaple,strawberry,cocnut,avogardo; do curl -k --header "X-Vault-Token: hvs.jwdWlFXsU4YPgMEMol1U4cc7" --request POST --data '{"password": "'"$u"'"} http://40.78.123.89:8200/v1/auth/userpass/users/$u write auth/userpass/users/$u password=$u; done
+
+for u in apple mango banana pineapple strawberry coconut avogardo; do   curl -k --header "X-Vault-Token: hvs.jwdWlFXsU4YPgMEMol1U4cc7"        --request POST        --data "{\"password\": \"$u\"}"        http://40.78.123.89:8200/v1/auth/userpass/users/$u; done
+
+
+vault list auth/userpass/users
+-------------------------------------------------------------------------------------------
+18-Login via CLI API
+
+vault login -method=userpass username=apple
