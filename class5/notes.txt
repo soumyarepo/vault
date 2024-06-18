@@ -1,0 +1,48 @@
+helm install vault hashicorp/vault --set='ui.enabled=true' --set='ui.serviceType=LoadBalancer'
+
+
+to enable kv via cli-
+vault  secrets enable -version=2 kv
+
+to disable kv-
+ vault secrets disable kv/
+
+list vault secrets
+vault secrets list -detailed
+
+
+vault login 
+ 
+------------------------------------------------------------------------
+vault policy write evon_policy - <<EOF
+path "kv/metadata/"{
+capabilities = ["list"]
+}
+path "kv/metadata/users"{
+capabilities = ["list"]
+}
+path "kv/data/users/evon" {
+capabilities = ["list",	"read",	"update",	"delete"]
+}
+path "kv/delete/users/evon"{
+capabilities = ["delete",	"update"]
+}
+EOF
+-----------------------------------------------------------------------------------
+vault policy list
+vault token create -policy=evon_policy
+vault write auth/userpass/users/coke policies="evon_policy"
+
+vault policy delete evon_policy
+vault read auth/userpass/users/coke
+vault write auth/userpass/users/coke policies="default"
+
+vault write auth/userpass/users/jsckson password=vault policies=evon_pollicy
+ 
+api to enable kv
+curl -k -H "X-Vault-Token: hvs.A8cb1X0DkvyCQcCRWAeazVbc" --data @secretengine.json http://13.83.0.189:8200/v1/sys/mounts/kv
+ -enable kv via api
+
+api to create pollicy 
+ curl -k -H "X-Vault-Token: hvs.A8cb1X0DkvyCQcCRWAeazVbc" --request POST --data @secret_policy_curl.json http://13.83.0.189:8200/v1/sys/policy/secret-api-
+ -Create attach policy via API
